@@ -3,10 +3,10 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  background-color: #019Ec1;
 }
 
 header {
-  background-color: #333;
   color: #fff;
   padding: 1rem;
 }
@@ -26,9 +26,124 @@ header nav ul li a {
   text-decoration: none;
 }
 
+
+
+
+
 main {
-  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
 }
+
+.deliveries {
+  flex: 3;
+  margin-right: 20px;
+}
+
+.deliveries h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.delivery {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.delivery h3 {
+  margin-top: 0;
+}
+
+.delivery p {
+  margin: 10px 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #00a0d1;
+  color: white;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.buttons button:nth-child(2) {
+  background-color: #d9534f;
+}
+
+.profile {
+  flex: 1;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.profile-info {
+  background-color: #e0e0e0;
+  height: 150px;
+  margin-bottom: 20px;
+}
+
+.profile button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #00a0d1;
+  color: white;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+hr {
+  margin: 20px 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="email"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+aside button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #00a0d1;
+  color: white;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+
+
+
+
 
 footer {
   background-color: #333;

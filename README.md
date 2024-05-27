@@ -1,2 +1,0 @@
-# KittyDelivery_Delivery
-KittyDelivery_Delivery

@@ -1,15 +1,17 @@
 <section class="deliveries">
     <h2>Mes livraisons</h2>
-    <div class="delivery">
-        <h3>Livraison de x à x</h3>
-        <p>Commande :</p>
-        <p>Prix de la livraison : x €</p>
+    <% deliveries.forEach(delivery => { %>
+      <div class="delivery">
+        <h3>Livraison de <%= delivery.from %> à <%= delivery.to %></h3>
+        <p>Commande : <%= delivery.orderNumber %></p>
+        <p>Prix de la livraison : <%= delivery.price %> €</p>
         <div class="buttons">
-            <button>Accepter</button>
-            <button>Refuser</button>
+          <button>Accepter</button>
+          <button>Refuser</button>
         </div>
-    </div>
-</section>
+      </div>
+    <% }) %>
+  </section>
 <aside class="profile">
     <h2>Mon profil</h2>
     <div class="profile-info">

@@ -1,7 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import DeliveryPage from '../components/DeliveryPage.vue'
-import ProfilePage from '../components/ProfilePage.vue'
-import TrackingPage from '../components/TrackingPage.vue'
+// KittyDelivery_Delivery/frontend/src/router/index.js
+import { createRouter, createWebHistory } from 'vue-router';
+import DeliveryPage from '../components/DeliveryPage.vue';
+import ProfilePage from '../components/ProfilePage.vue';
+import TrackingPage from '../components/TrackingPage.vue';
 
 const routes = [
   {
@@ -14,7 +15,7 @@ const routes = [
     component: DeliveryPage
   },
   {
-    path: '/profile',
+    path: '/profile/:id', // Add user ID parameter
     name: 'profile',
     component: ProfilePage
   },
@@ -23,11 +24,11 @@ const routes = [
     name: 'tracking',
     component: TrackingPage
   }
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-})
+});
 
-export default router
+export default router;

@@ -9,15 +9,15 @@ const { connectToDatabase } = require('./config/dbsql.config'); // Include the S
 
 // Route imports
 const userRoutes = require('./routes/userRoutes');
-const restaurantRoutes = require('./routes/restaurantRoutes');
+/*const restaurantRoutes = require('./routes/restaurantRoutes');
 const apiKeyRoutes = require('./routes/apiKeyRoutes');
 const addressRoutes = require('./routes/addressRoutes');
 const regionRoutes = require('./routes/regionRoutes');
 const cityRoutes = require('./routes/cityRoutes');
-const neighborhoodRoutes = require('./routes/neighborhoodRoutes');
+const neighborhoodRoutes = require('./routes/neighborhoodRoutes');*/
 
 const app = express();
-const port = 3000;
+const port = 3002;
 
 app.use("/api", notificationsRouter);
 app.use(cors());
@@ -41,16 +41,16 @@ connectToDatabase();
 
 // Use routes
 app.use('/users', userRoutes);
-app.use('/rest', restaurantRoutes);
+/*app.use('/rest', restaurantRoutes);
 app.use('/apiKeys', apiKeyRoutes);
 app.use('/addresses', addressRoutes);
 app.use('/regions', regionRoutes);
 app.use('/cities', cityRoutes);
-app.use('/neighborhoods', neighborhoodRoutes);
+app.use('/neighborhoods', neighborhoodRoutes);*/
 
 
 //Ici on envoit les infos vers le front
 
 app.use("/api", ordersRouter);
 
-app.listen(port, () => console.log("app running on http://localhost:3000"));
+app.listen(port, () => console.log(`app running on http://localhost:${port}`));

@@ -19,23 +19,11 @@ const neighborhoodRoutes = require('./routes/neighborhoodRoutes');*/
 
 const app = express();
 const port = process.env.PORT || 3002;
-const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/kittydelivery";
 
 app.use("/api", notificationsRouter);
 app.use(cors());
 
 const db = require("./models");
-db.mongoose
-  .connect(mongoURI, {
-
-  })
-  .then(() => {
-    console.log("Connected to the database!");
-  })
-  .catch((err) => {
-    console.log("Cannot connect to the database!", err);
-    process.exit();
-  });
 
 // Connect to the SQL Server database
 connectToDatabase();

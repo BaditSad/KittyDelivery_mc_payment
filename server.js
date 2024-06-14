@@ -1,3 +1,5 @@
+require('dotenv').config(); // Charger les variables d'environnement à partir de .env
+
 const notificationsRouter = require("./controllers/NotificationController");
 const ordersRouter = require("./controllers/OrderController");
 
@@ -5,7 +7,6 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { connectToDatabase } = require('./config/dbsql.config'); // Include the SQL Server configuration
-
 
 // Route imports
 const userRoutes = require('./routes/userRoutes');
@@ -17,14 +18,15 @@ const cityRoutes = require('./routes/cityRoutes');
 const neighborhoodRoutes = require('./routes/neighborhoodRoutes');*/
 
 const app = express();
-const port = 3002;
+const port = process.env.PORT || 3002;
+const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/kittydelivery";
 
 app.use("/api", notificationsRouter);
 app.use(cors());
 
 const db = require("./models");
 db.mongoose
-  .connect(db.url, {
+  .connect(mongoURI, {
 
   })
   .then(() => {
@@ -34,7 +36,6 @@ db.mongoose
     console.log("Cannot connect to the database!", err);
     process.exit();
   });
-
 
 // Connect to the SQL Server database
 connectToDatabase();
@@ -48,8 +49,7 @@ app.use('/regions', regionRoutes);
 app.use('/cities', cityRoutes);
 app.use('/neighborhoods', neighborhoodRoutes);*/
 
-
-//Ici on envoit les infos vers le front
+//Ici on envoie les infos vers le front
 
 app.use("/api", ordersRouter);
 

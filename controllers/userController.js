@@ -1,12 +1,13 @@
-const { sql } = require('../config/dbsql.config');
+const bcrypt = require('bcrypt');
+const User = require('../models/userModel');
 
 // Function to get a user by ID
 async function getUserById(req, res) {
     const userId = req.params.id;
     try {
-        const result = await sql.query`SELECT * FROM Users WHERE user_id = ${userId}`;
-        if (result.recordset.length > 0) {
-            res.json(result.recordset[0]);
+        const user = await User.findByPk(userId);
+        if (user) {
+            res.json(user);
         } else {
             res.status(404).json({ message: 'User not found' });
         }
@@ -17,57 +18,69 @@ async function getUserById(req, res) {
 }
 
 // Function to get all users
-async function getAllUsers() {
+async function getAllUsers(req, res) {
     try {
-        const result = await sql.query`SELECT * FROM Users`;
-        return result.recordset;
-    } catch (err) {
-        console.error("Error fetching users: ", err);
-        throw err;
-    }
-}
-
-async function getUsers(req, res) {
-    try {
-        const users = await getAllUsers();
+        const users = await User.findAll();
         res.json(users);
     } catch (err) {
-        console.error("Error retrieving users: ", err);
-        res.status(500).json({ error: "Error retrieving users." });
+        console.error("Error fetching users: ", err);
+        res.status(500).json({ error: "Error fetching users." });
     }
 }
 
+// Function to create a new user
 async function createUser(req, res) {
-    const { email, role, password, account_status, user_name, telephone, address } = req.body;
+    const { user_email, user_role, user_password, user_account_status, user_name, user_telephone, user_address } = req.body;
     try {
-        await sql.query`INSERT INTO Users (email, role, password, account_status, user_name, telephone, address) VALUES (${email}, ${role}, ${password}, ${account_status}, ${user_name}, ${telephone}, ${address})`;
-        res.status(201).json({ message: "User created successfully." });
+        // Hash the password before storing it
+        const hashedPassword = await bcrypt.hash(user_password, 10);
+
+        const newUser = await User.create({
+            user_email,
+            user_role,
+            user_password: hashedPassword,
+            user_account_status,
+            user_name,
+            user_telephone,
+            user_address
+        });
+        res.status(201).json({ message: "User created successfully.", user: newUser });
     } catch (err) {
         console.error("Error creating user: ", err);
         res.status(500).json({ error: "Error creating user." });
     }
 }
 
+// Function to update an existing user
 async function updateUser(req, res) {
     const userId = req.params.id;
-    const { email, role, account_status, user_name, telephone, address, newPassword, oldPassword } = req.body;
+    const { user_email, user_role, user_account_status, user_name, user_telephone, user_address, newPassword, oldPassword } = req.body;
     try {
-        const result = await sql.query`SELECT password FROM Users WHERE user_id = ${userId}`;
-        const user = result.recordset[0];
+        const user = await User.findByPk(userId);
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        if (user.password !== oldPassword) {
+        const passwordMatches = await bcrypt.compare(oldPassword, user.user_password);
+        if (!passwordMatches) {
             return res.status(400).json({ message: 'Old password is incorrect' });
         }
 
         if (oldPassword === newPassword) {
             return res.status(400).json({ message: 'New password must be different from the old password' });
         }
-        
-        await sql.query`UPDATE Users SET email = ${email}, role = ${role}, password = ${newPassword}, account_status = ${account_status}, user_name = ${user_name}, telephone = ${telephone}, address = ${address} WHERE user_id = ${userId}`;
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await user.update({
+            user_email,
+            user_role,
+            user_password: hashedPassword,
+            user_account_status,
+            user_name,
+            user_telephone,
+            user_address
+        });
         res.json({ message: "User updated successfully." });
     } catch (err) {
         console.error("Error updating user: ", err);
@@ -75,20 +88,27 @@ async function updateUser(req, res) {
     }
 }
 
+// Function to soft delete a user (update account status to indicate deactivation)
 async function deleteUser(req, res) {
     const userId = req.params.id;
     try {
-        await sql.query`DELETE FROM Users WHERE user_id = ${userId}`;
-        res.json({ message: "User deleted successfully." });
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        await user.update({ user_account_status: 'Inactive' });
+        res.json({ message: "User account deactivated successfully." });
     } catch (err) {
-        console.error("Error deleting user: ", err);
-        res.status(500).json({ error: "Error deleting user." });
+        console.error("Error deactivating user: ", err);
+        res.status(500).json({ error: "Error deactivating user." });
     }
 }
 
 module.exports = {
     getUserById,
-    getUsers,
+    getAllUsers,
     createUser,
     updateUser,
     deleteUser

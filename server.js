@@ -1,16 +1,18 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const { connectToDatabase } = require('./config/pgsql.config'); // Importez votre configuration Sequelize
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const { connectToDatabase } = require('./config/dbsql.config'); // Include the SQL Server configuration
+
+
+// Route imports
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
-const port = 3002;
+const port = PORT || 3002;
 
 app.use(cors());
-app.use(bodyParser.json());
 
-// Connect to the database
+// Connect to the SQL Server database
 connectToDatabase();
 
 // Use routes

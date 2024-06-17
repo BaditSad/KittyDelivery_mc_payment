@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const argon2 = require('argon2');
 const User = require('../models/userModel');
 
 // Function to get a user by ID
@@ -33,7 +33,7 @@ async function createUser(req, res) {
     const { user_email, user_role, user_password, user_account_status, user_name, user_telephone, user_address } = req.body;
     try {
         // Hash the password before storing it
-        const hashedPassword = await bcrypt.hash(user_password, 10);
+        const hashedPassword = await argon2.hash(user_password);
 
         const newUser = await User.create({
             user_email,
@@ -62,7 +62,7 @@ async function updateUser(req, res) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const passwordMatches = await bcrypt.compare(oldPassword, user.user_password);
+        const passwordMatches = await argon2.verify(user.user_password, oldPassword);
         if (!passwordMatches) {
             return res.status(400).json({ message: 'Old password is incorrect' });
         }
@@ -71,7 +71,7 @@ async function updateUser(req, res) {
             return res.status(400).json({ message: 'New password must be different from the old password' });
         }
 
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const hashedPassword = await argon2.hash(newPassword);
         await user.update({
             user_email,
             user_role,

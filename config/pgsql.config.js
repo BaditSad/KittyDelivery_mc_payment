@@ -1,20 +1,23 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
-// Remplacez ces valeurs par celles de votre configuration de base de données
-const sequelize = new Sequelize('kittydelivery', 'postgres', 'admin', {
-  host: 'localhost',
-  dialect: 'postgres' // Assurez-vous que le dialecte est correct
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_ID_NAME,
+  process.env.DB_ID_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_DIALECT,
+    logging: false,
+  }
+);
 
-// Fonction pour se connecter à la base de données
-async function connectToDatabase() {
-    try {
-        await sequelize.authenticate();
-        console.log('Connexion réussie à la base de données PostgreSQL');
-    } catch (err) {
-        console.error('Erreur de connexion à la base de données PostgreSQL:', err);
-        throw err;
-    }
-}
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
 
-module.exports = { sequelize, connectToDatabase };
+module.exports = sequelize;

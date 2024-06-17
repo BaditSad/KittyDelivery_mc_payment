@@ -1,8 +1,8 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config//pgsql.config'); // Assurez-vous que le chemin est correct
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/pgsql.config");
 
 const User = sequelize.define(
-  'User',
+  "User",
   {
     user_id: {
       type: DataTypes.INTEGER,
@@ -49,7 +49,7 @@ const User = sequelize.define(
     },
   },
   {
-    tableName: 'users',
+    tableName: "users",
     timestamps: false,
   }
 );

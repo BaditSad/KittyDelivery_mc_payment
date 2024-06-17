@@ -1,22 +1,27 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const { connectToDatabase } = require('./config/pgsql.config'); // Include the SQL Server configuration
-
-
-// Route imports
 const userRoutes = require('./routes/userRoutes');
 
+const sequelize = require("./config/pgsql.config");
+require("dotenv").config();
 const app = express();
-const port = 3002 ;
+const port = process.env.PORT;
 
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Routes
+app.use("/users", userRoutes);
 
 
-// Connect to the SQL Server database
-connectToDatabase();
-
-// Use routes
-app.use('/users', userRoutes);
-
-app.listen(port, () => console.log(`User microservice running on http://localhost:${port}`));
+sequelize.sync({ alter: true })
+  .then(() => {
+    console.log('All models were synchronized successfully.');
+    app.listen(port, () => console.log(`App running on http://localhost:${port}`));
+  })
+  .catch(err => {
+    console.error('Unable to synchronize the models:', err);
+  });

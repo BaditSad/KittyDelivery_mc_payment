@@ -6,8 +6,6 @@ services:
     ports:
       - "3002:3002"
     environment:
-      - JWT_SECRET=cestpourlasciencemerciderestercourtoi
-      - REFRESH_TOKEN_SECRET=jesensquelesemmerdesvontcommenceraveccettehistoirederefreshtokentoutcapoursetaperundauprojet
       - PORT=3002
       - DB_NAME=kittydelivery
       - DB_ID_NAME=postgres

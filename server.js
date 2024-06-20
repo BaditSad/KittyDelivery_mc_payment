@@ -7,20 +7,22 @@ const userRoutes = require("./routes/userRoutes");
 const sequelize = require("./config/pgsql.config");
 const fs = require("fs");
 const path = require("path");
+const allowRequest = require("./middlewares/allowRequest");
 
 const app = express();
 const port = process.env.PORT;
 
-const swaggerDocumentd = JSON.parse(
+const swaggerDocument = JSON.parse(
   fs.readFileSync(path.join(__dirname, "swagger.json"))
 );
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(allowRequest);
 
 app.use("/swagger.json", (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  res.send(swaggerDocumentd);
+  res.send(swaggerDocument);
 });
 
 app.use(express.urlencoded({ extended: true }));
@@ -33,7 +35,7 @@ sequelize
   .then(() => {
     console.log("All models were synchronized successfully.");
     app.listen(port, () =>
-      console.log(`App running on http://localhost:${port}`)
+      console.log(`🚀 App running on http://localhost:${port}`)
     );
   })
   .catch((err) => {

@@ -88,8 +88,8 @@ async function updateUser(req, res) {
     }
 }
 
-// Function to soft delete a user (update account status to indicate deactivation)
-async function deleteUser(req, res) {
+// Function to logout a user
+async function logoutUser(req, res) {
     const userId = req.params.id;
     try {
         const user = await User.findByPk(userId);
@@ -98,8 +98,36 @@ async function deleteUser(req, res) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        await user.update({ user_account_status: 'Inactive' });
-        res.json({ message: "User account deactivated successfully." });
+        await user.update({ user_token_access: null });
+        res.json({ message: "User logged out successfully." });
+    } catch (err) {
+        console.error("Error logging out user: ", err);
+        res.status(500).json({ error: "Error logging out user." });
+    }
+}
+
+async function deleteUser(req, res) {
+    const userId = req.params.id;
+    const { password } = req.body;
+
+    try {
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const passwordMatches = await argon2.verify(user.user_password, password);
+        if (!passwordMatches) {
+            return res.status(400).json({ message: 'Password is incorrect' });
+        }
+
+        await user.update({ 
+            user_account_status: 'Inactive',
+            user_token_access: null,
+            user_token_refresh: null
+        });
+        res.json({ message: "User account deactivated and tokens removed successfully." });
     } catch (err) {
         console.error("Error deactivating user: ", err);
         res.status(500).json({ error: "Error deactivating user." });
@@ -111,5 +139,6 @@ module.exports = {
     getAllUsers,
     createUser,
     updateUser,
+    logoutUser,
     deleteUser
 };

@@ -14,6 +14,9 @@ router.post('/', userController.createUser);
 // Route to update a user by ID
 router.put('/:id', userController.updateUser);
 
+// Route to logout a user
+router.put('/logout/:id', userController.logoutUser);
+
 // Route to soft delete a user
 router.put('/delete/:id', userController.deleteUser);
 

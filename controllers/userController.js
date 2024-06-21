@@ -98,7 +98,10 @@ async function logoutUser(req, res) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        await user.update({ user_token_access: null });
+        await user.update({ 
+            user_token_access: null,
+            user_token_refresh: null 
+        });
         res.json({ message: "User logged out successfully." });
     } catch (err) {
         console.error("Error logging out user: ", err);
